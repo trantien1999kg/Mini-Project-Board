@@ -413,3 +413,66 @@ canvas {
 .overdue {
     border-left: 4px solid #ef4444;
 }
+/* --- RESPONSIVE OPTIMIZATION --- */
+
+/* 1. Thiết lập chung cho màn hình dưới 1024px (Tablet & Mobile) */
+@media (max-width: 1024px) {
+  body {
+    flex-direction: column; /* Chuyển từ hàng ngang sang hàng dọc */
+    height: auto;
+    overflow-x: hidden;
+  }
+
+  /* Sidebar và Stats Panel chiếm toàn bộ chiều rộng */
+  .box-sidebar, .box-panel {
+    width: 100% !important;
+    border: none;
+    border-bottom: 2px solid #6363632b;
+  }
+
+  .sidebar, .stats-panel {
+    width: 100% !important;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+
+  /* Board: Các cột xếp chồng lên nhau */
+  .board {
+    flex-direction: column;
+    align-items: center;
+    padding: 15px;
+  }
+
+  .column {
+    width: 100% !important;
+    max-width: 500px; /* Không cho cột quá rộng trên tablet */
+    margin-bottom: 20px;
+    min-height: auto !important;
+  }
+
+  /* Điều chỉnh lại chiều cao danh sách task trên mobile */
+  #todoList, #inProgressList, #doneList {
+    min-height: 150px !important;
+    max-height: 400px; /* Tránh cột quá dài gây mỏi tay khi cuộn */
+  }
+
+  /* Biểu đồ: Cho phép co giãn theo khung chứa */
+  canvas#statusChart {
+    width: 100% !important;
+    height: auto !important;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+}
+
+/* 2. Tối ưu riêng cho điện thoại nhỏ (dưới 480px) */
+@media (max-width: 480px) {
+  .sidebar input, .sidebar textarea, .sidebar select {
+    font-size: 16px; /* Tránh iPhone tự động zoom vào khi click input */
+  }
+  
+  .status-badge {
+    width: 100%;
+    justify-content: center;
+  }
+}
