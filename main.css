@@ -272,7 +272,7 @@ canvas {
 /* Style cho các Card công việc nằm bên trong list */
 .task-card {
     background: white;
-    border-radius: 0.5rem;
+    border-radius: 0.3rem;
     padding: 15px;
     margin-bottom: 10px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);

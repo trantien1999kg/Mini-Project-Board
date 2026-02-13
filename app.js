@@ -101,10 +101,10 @@ function renderDone(dataToRender = allTasks){
     const filtered = dataToRender.filter(p => p.isDone());
     doneContainer.innerHTML = filtered.map(p => p.getDisplayCard()).join('');
 }
-function renderBoard() {
-    renderTodo();
-    renderInProgress();
-    renderDone();
+function renderBoard(dataToRender = allTasks) {
+    renderTodo(dataToRender);
+    renderInProgress(dataToRender);
+    renderDone(dataToRender);
 }
 renderBoard();
 /* --------------------3 Add Task--------------------------- */
@@ -140,7 +140,7 @@ btnAdd.addEventListener('click', function(e){
         allTasks.push(newTask);
         
         renderBoard(); 
-
+        renderAssignee();
         // Reset form
         title.value = "";
         description.value = ""; 
@@ -215,3 +215,46 @@ todoContainer.addEventListener('drop', (e) => {
         }
     });
 });
+/* ----------------------------6 Filter by Assignee----------------------- */
+const selectContainer = document.getElementById('assigneeFilter')
+function renderAssignee() {
+    // Nếu 1 người làm nhiều task thì cũng chỉ hiện 1 tên
+    const uniqueAssignees = [...new Set(allTasks.map(p => p.assignee))];
+
+    // Tạo HTML: Dòng "All" đầu tiên + danh sách người dùng
+    const optionsHTML = `
+        <option value="all">All</option>
+        ${uniqueAssignees.map(name => `<option value="${name}">${name}</option>`).join('')}
+    `;
+
+    selectContainer.innerHTML = optionsHTML;
+}
+renderAssignee();
+
+TaskItem.prototype.taskAssign = function(selectedAssign) {
+    // all thì ra tất cả
+    if (selectedAssign === "all") return true;
+    return this.assignee === selectedAssign; 
+};
+selectContainer.addEventListener('change', function() {
+    // Lấy giá trị của option vừa chọn
+    const selectedValue = this.value; 
+    console.log(selectedValue)
+    const otpValue = allTasks.filter(p => p.taskAssign(selectedValue));
+    renderBoard(otpValue); 
+});
+
+/* -------------------------------7 Search-------------------------------- */
+const searchInput= document.getElementById('searchInput');
+searchInput.addEventListener("input", function(){
+    const keyword = this.value.toLowerCase();// Nên dùng để tránh lỗi viết hoa
+    if (keyword === "") {
+        renderBoard();
+        return;
+    }
+    const filtered = allTasks.filter(p =>
+    p.title.toLowerCase().includes(keyword)
+    );// starsWith(ThamSoSearch) để xem tham số mình nhâp vào có phải là chữ đầu của cụm nào đó k
+    // Render lại chợ theo cái hằng filter đã lọc
+    renderBoard(filtered);
+})
