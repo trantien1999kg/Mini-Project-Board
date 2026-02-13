@@ -146,8 +146,49 @@ body {
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
 }
 
+/* Hiệu ứng nhấp nháy (Animation) */
+@keyframes pulse-red {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 68, 68, 0.7);
+        border-color: #ff4444;
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(255, 68, 68, 0);
+        border-color: #ff0000;
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 68, 68, 0);
+        border-color: #ff4444;
+    }
+}
+
 .task-card.overdue {
-  border: 2px solid red;
+    background-color: #fff5f5; /* Nền hồng phân biệt với task thường */
+    position: relative;
+    overflow: hidden;
+    animation: pulse-red 2s infinite; /* nhấp nháy */
+}
+
+
+/* Dải overdue ở góc cảnh báo */
+.task-card.overdue::before {
+    content: "OVERDUE";
+    position: absolute;
+    top: 14px;
+    right: -32px;
+    background: #ff4444;
+    color: white;
+    font-size: 13px;
+    font-weight: bold;
+    padding: 5px 26px;
+    transform: rotate(45deg);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+/* Làm cho cái label ngày tháng đỏ */
+.task-card.overdue .due-date-label {
+    font-weight: bold;
+    text-decoration: underline;
 }
 
 /* RIGHT PANEL */
@@ -476,3 +517,122 @@ canvas {
     justify-content: center;
   }
 }
+
+/* Container tổng */
+.box-panel {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.box_title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #2d3436;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #e9ecef;
+    padding-bottom: 10px;
+}
+
+/* Biến các dòng text thành các thẻ Card nhỏ */
+#statsInfo {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-bottom: 25px;
+}
+
+#statsInfo p {
+    background: white;
+    padding: 15px;
+    margin: 0;
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+    color: #636e72;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid #edf2f7;
+}
+
+#statsInfo p:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Màu sắc nhấn cho từng con số */
+#totalTasks { color: #0984e3; font-size: 1.2rem; }
+#donePercent { color: #00b894; font-size: 1.2rem; }
+#overdueCount { 
+    color: #d63031; 
+    font-size: 1.2rem;
+    /* Nếu có overdue thì cho nó rung nhẹ để cảnh báo */
+    animation: soft-pulse 2s infinite; 
+}
+
+@keyframes soft-pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.7; }
+    100% { opacity: 1; }
+}
+
+/* Khu vực biểu đồ */
+.stats-panel h4 {
+    color: #2d3436;
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+}
+
+.stats-panel h4::before {
+    content: "📊";
+    margin-right: 8px;
+}
+
+#statusChart {
+    background: white;
+    padding: 15px;
+    border-radius: 15px;
+    border: 1px solid #edf2f7;
+    max-width: 100%;
+}
+
+
+.stat-item {
+    background: white;
+    border-radius: 8px 8px 0 0 ;
+    margin-bottom: 10px;
+    border: 1px solid #edf2f7;
+}
+
+.stat-item p {
+    display: flex;
+    justify-content: space-between;
+    margin: 0 0 8px 0; /* Cách thanh bar 8px */
+    font-weight: 600;
+}
+
+/* Thanh nền xám nhạt */
+.progress-bg {
+    width: 100%;
+    height: 5px;
+    background-color: #e9ecef;
+    border-radius: 10px;
+    overflow: hidden; /* Để thanh con không tràn ra ngoài khi bo góc */
+}
+
+/* Thanh màu chạy bên trong */
+.progress-bar {
+    height: 100%;
+    border-radius: 10px;
+    transition: width 0.5s ease-in-out; /* Hiệu ứng chạy mượt khi thay đổi % */
+}
+
+/* Màu sắc cho từng loại */
+.bar-blue { background: linear-gradient(90deg, #3498db, #2980b9); }
+.bar-green { background: linear-gradient(90deg, #2ecc71, #27ae60); }
+.bar-red { background: linear-gradient(90deg, #e74c3c, #c0392b); }

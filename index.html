@@ -72,15 +72,31 @@
   <div class="head-title">
     <div class="box_title">Statistics</div>
   </div>
-<div class="stats-panel">
+  <div class="stats-panel">
 
-  <div id="statsInfo"></div>
+    <div id="statsInfo">
+      <div class="stat-item">
+        <p>Total Tasks: <span id="totalTasks">0</span></p>
+        <div class="progress-bg"><div id="barTotal" class="progress-bar bar-blue" style="width: 100%"></div></div>
+      </div>
 
-  <h4>Status Chart</h4>
-  <canvas id="statusChart" width="200" height="150"></canvas>
+      <div class="stat-item">
+        <p>Done %: <span id="donePercent">0%</span></p>
+        <div class="progress-bg"><div id="barDone" class="progress-bar bar-green" style="width: 0%"></div></div>
+      </div>
+
+      <div class="stat-item">
+        <p>Overdue: <span id="overdueCount">0</span></p>
+        <div class="progress-bg"><div id="barOverdue" class="progress-bar bar-red" style="width: 0%"></div></div>
+      </div>
+    </div>
+
+    <h4>Status Chart</h4>
+    <canvas id="statusChart"></canvas>
+
+  </div>
 </div>
-</div>
-
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

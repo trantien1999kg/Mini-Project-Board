@@ -1,3 +1,4 @@
+let statusChartInstance = null;
 const projects = [
   {
     id: 1,
@@ -7,7 +8,8 @@ const projects = [
       { taskId: 1, title: "Design UI html", description: "Tạo layout UX/UI bằng html và css, tạo render cho 3 status và vào renderBoard()",status: "todo", priority: "high", assignee: "HTML", dueDate: "2026-02-20" },
       { taskId: 2, title: "Implement Drag Drop", description: "Thêm Kéo task giữa 3 cột, cập nhật status, Render lại board, Không thao tác DOM trực tiếp để đổi cột ",status: "in-progress", priority: "medium", assignee: "Javascript", dueDate: "2026-02-25" },
       { taskId: 3, title: "Deploy to production", description: "Deploy project to host and creat domain",status: "done", priority: "high", assignee: "PHP", dueDate: "2026-02-28" },
-      { taskId: 4, title: "CRUD", description: "CRUD stands for Create, Read, Update, and Delete",status: "done", priority: "low", assignee: "Javascript", dueDate: "2026-02-28" }
+      { taskId: 4, title: "CRUD", description: "CRUD stands for Create, Read, Update, and Delete",status: "done", priority: "low", assignee: "Javascript", dueDate: "2026-02-28" },
+      { taskId: 5, title: "Statistics Panel", description: "Render Total tasks - Done % - Overdue count and Create Chart Canvas",status: "todo", priority: "low", assignee: "BE", dueDate: "2026-02-12" }
     ]
   }
 ];
@@ -105,6 +107,10 @@ function renderBoard(dataToRender = allTasks) {
     renderTodo(dataToRender);
     renderInProgress(dataToRender);
     renderDone(dataToRender);
+
+    renderStatsLive();
+    renderChart();
+    updateStatistics();
 }
 renderBoard();
 /* --------------------3 Add Task--------------------------- */
@@ -247,7 +253,7 @@ selectContainer.addEventListener('change', function() {
 /* -------------------------------7 Search-------------------------------- */
 const searchInput= document.getElementById('searchInput');
 searchInput.addEventListener("input", function(){
-    const keyword = this.value.toLowerCase();// Nên dùng để tránh lỗi viết hoa
+    const keyword = this.value.toLowerCase();
     if (keyword === "") {
         renderBoard();
         return;
@@ -258,3 +264,88 @@ searchInput.addEventListener("input", function(){
     // Render lại chợ theo cái hằng filter đã lọc
     renderBoard(filtered);
 })
+/* ------------------------------- Statistics Panel ------------------------------- */
+Project.prototype.getStats = function() {
+    const total = this.tasks.length;
+
+    const doneCount = this.tasks.filter(t => t.status === "done").length;
+
+    const overdueCount = this.tasks.filter(t => t.isOverdue()).length;
+
+    const donePercent = total === 0 ? 0 : Math.round((doneCount / total) * 100);
+
+    return {
+        total,
+        donePercent,
+        overdueCount
+    };
+};
+function renderStatsLive() {
+    const total = allTasks.length;
+
+    const doneCount = allTasks.filter(t => t.status === "done").length;
+
+    const overdueCount = allTasks.filter(t => t.isOverdue()).length;
+
+    const donePercent = total === 0 
+        ? 0 
+        : Math.round((doneCount / total) * 100);
+
+    document.getElementById("totalTasks").textContent = total;
+    document.getElementById("donePercent").textContent = donePercent + "%";
+    document.getElementById("overdueCount").textContent = overdueCount;
+}
+function renderChart() {
+    const canvas = document.getElementById("statusChart");
+    const ctx = canvas.getContext("2d");
+
+    // Đếm số lượng theo status
+    const todo = allTasks.filter(t => t.status === "todo").length;
+    const inProgress = allTasks.filter(t => t.status === "in-progress").length;
+    const done = allTasks.filter(t => t.status === "done").length;
+
+    // Nếu chart đã tồn tại → hủy nó trước khi vẽ mới
+    if (statusChartInstance) {
+        statusChartInstance.destroy();
+    }
+
+    statusChartInstance = new Chart(ctx, {
+        type: "doughnut",
+        data: {
+            labels: ["Todo", "In Progress", "Done"],
+            datasets: [{
+                data: [todo, inProgress, done],
+                backgroundColor: [
+                    "#0ea4e970",
+                    "#f59f0b7e",
+                    "#22c55e7f"
+                ]
+            }]
+        },
+        options: {
+            responsive: false,
+            plugins: {
+                legend: {
+                    position: "bottom"
+                }
+            }
+        }
+    });
+}
+
+function updateStatistics() {
+    const total = allTasks.length;
+    const doneCount = allTasks.filter(t => t.isDone()).length;
+    const overdueCount = allTasks.filter(t => t.isOverdue()).length;
+
+    const donePercent = total > 0 ? Math.round((doneCount / total) * 100) : 0;
+    const overduePercent = total > 0 ? Math.round((overdueCount / total) * 100) : 0;
+
+    document.getElementById('totalTasks').innerText = total;
+    document.getElementById('donePercent').innerText = donePercent + "%";
+    document.getElementById('overdueCount').innerText = overdueCount;
+
+    document.getElementById('barDone').style.width = donePercent + "%";
+    document.getElementById('barOverdue').style.width = overduePercent + "%";
+    document.getElementById('barTotal').style.width = total > 0 ? "100%" : "0%";
+}
