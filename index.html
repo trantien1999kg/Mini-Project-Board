@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Mini Project Board</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="./main.css">
+</head>
+<body>
+
+<!-- LEFT SIDEBAR -->
+ <div class="box-sidebar">
+  <div class="head-title">
+    <div class="box_title">Add Task</div>
+  </div>
+<div class="sidebar">
+  <form id="taskForm">
+    <input id="title" placeholder="Title" required><br>
+    <textarea id="description" placeholder="Description"></textarea><br>
+    
+    <select id="priority">
+      <option value="low">Low</option>
+      <option value="medium">Medium</option>
+      <option value="high">High</option>
+    </select><br>
+
+    <input id="assignee" placeholder="Assignee"><br>
+    <input type="date" id="dueDate"><br>
+
+    <button id="btnAdd" type="submit">Add</button>
+  </form>
+
+  <hr>
+
+
+</div>
+    <div class="head-title">
+        <div class="box_title">Filter</div>
+    </div>
+  <div class="sidebar">
+    <select id="assigneeFilter">
+    <option value="all">All</option>
+    <option value="Tien">Tien</option>
+    <option value="An">An</option>
+    <option value="Binh">Binh</option>
+  </select>
+
+  <br><br>
+  <input id="searchInput" placeholder="Search...">
+  </div>
+ </div>
+<!-- CENTER BOARD -->
+
+<div class="board">
+    
+  <div class="column" data-status="todo">
+    <div class="status-badge todo">Todo</div>
+    <div class="task-list" id="todoList"></div>
+  </div>
+
+  <div class="column" data-status="inProgress">
+    <div class="status-badge inProgress">In Progress</div>
+    <div class="task-list" id="inProgressList"></div>
+  </div>
+
+  <div class="column" data-status="done">
+    <div class="status-badge done">Complete</div>
+    <div class="task-list" id="doneList"></div>
+  </div>
+</div>
+
+<!-- RIGHT STATS -->
+<div class="box-panel">
+  <div class="head-title">
+    <div class="box_title">Statistics</div>
+  </div>
+<div class="stats-panel">
+
+  <div id="statsInfo"></div>
+
+  <h4>Status Chart</h4>
+  <canvas id="statusChart" width="200" height="150"></canvas>
+</div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

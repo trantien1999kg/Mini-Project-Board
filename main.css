@@ -1,0 +1,415 @@
+body {
+  font-family: Arial;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  height: 100vh;
+  transition: all 0.3s ease;
+}
+#todoList , #inProgressList , #doneList{
+    min-height: 600px;
+    overflow-y: auto;
+    max-height: 85vh;
+}
+/* LEFT PANEL */
+.sidebar {
+  width: 220px;
+  padding: 12px 24px 24px 24px;
+  background-color: #ffffff;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+}
+.box-sidebar{
+  border-right: 3px solid #6363632b;
+}
+.sidebar h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #444;
+}
+.box_title{
+    padding: 12px 0 12px 24px;
+}
+.head-title{
+    display: block;
+    font-weight: bold;
+    border-top: 3px dashed #6363632b;
+    font-size: 16px;
+    border-bottom: 3px dashed #6363632b;
+}
+/* Định dạng chung cho Input, Textarea, Select */
+.sidebar input, 
+.sidebar textarea, 
+.sidebar select {
+  width: 100%;
+  padding: 5px 16px;
+  margin-bottom: 15px;
+  border: 1px solid #e0e0e0;
+  border-radius: 0.5rem;
+  font-size: 14px;
+  outline: none;
+  box-sizing: border-box;    /* Giúp padding không làm tràn chiều rộng */
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+/* Hiệu ứng khi click vào ô nhập liệu */
+.sidebar input:focus, 
+.sidebar textarea:focus, 
+.sidebar select:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+}
+
+/* Riêng cho Textarea */
+.sidebar textarea {
+  border-radius: 12px;
+  resize: vertical;
+  min-height: 80px;
+}
+
+/*Add Task */
+.sidebar button {
+  width: 100%;
+  padding: 5px;
+  background-color: #ffffff;
+  color: #333;
+  border: 1px solid #e0e0e0;
+  border-radius: 20px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sidebar button:hover {
+  background-color: #333;
+  color: #f8f9fa;
+  border-color: #ccc;
+}
+
+.sidebar button::before {
+  content: "+";
+  margin-right: 8px;
+  font-size: 18px;
+}
+
+/* Đường kẻ ngang */
+.sidebar hr {
+  border: 0;
+  border-top: 1px solid #eee;
+  margin: 24px 0;
+}
+
+#searchInput {
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org" width="16" height="16" fill="grey" class="bi bi-search" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z""")/>></svg>');
+  background-repeat: no-repeat;
+  background-position: 12px center;
+  padding-left: 35px;
+  width: 100%;
+    padding: 5px 16px;
+    margin-bottom: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 0.5rem;
+    font-size: 14px;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+/* CENTER BOARD */
+.board {
+  flex: 1;
+  display: flex;
+  gap: 15px;
+  padding: 15px;
+  overflow-x: auto;
+}
+
+.column {
+  flex: 1;
+  background: #f4f4f4;
+}
+
+.column h3 {
+  text-align: center;
+}
+
+.task-card {
+    border: 1px solid #f0f0f0;
+    transition: transform 0.2s;
+}
+.task-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+}
+
+.task-card.overdue {
+  border: 2px solid red;
+}
+
+/* RIGHT PANEL */
+.stats-panel {
+  width: 260px;
+  padding: 15px;
+}
+.box-panel{
+    border-left: 3px solid #6363632b;
+}
+canvas {
+  margin-top: 10px;
+  border: 1px solid #ccc;
+}
+#assigneeFilter{
+    width: 100%;
+    padding: 5px 16px;
+    margin-bottom: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 0.5rem;
+    font-size: 14px;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+/* Style chung cho Badge */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    gap: 6px;
+}
+
+.status-badge::before {
+    content: "";
+    width: 3px;
+    height: 12px;
+    border-radius: 2px;
+}
+.todo {
+    background-color: #e0f2fe;
+    color: #0369a1;
+}
+.todo::before { background-color: #0ea5e9; }
+.column[data-status="todo"] .card-body {
+    border-left: 4px solid #0ea4e970;
+    padding-left: 8px;
+}
+.column[data-status="inProgress"] .card-body {
+    border-left: 4px solid #f59f0b7e;
+    padding-left: 8px;
+}
+
+.column[data-status="done"] .card-body {
+    border-left: 4px solid #22c55e7f;
+    padding-left: 8px;
+}
+.inProgress {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+.inProgress::before { background-color: #f59e0b; }
+
+.done {
+    background-color: #dcfce7;
+    color: #166534;
+}
+.done::before { background-color: #22c55e; }
+
+/* Căn giữa toàn bộ bảng công việc */
+.board {
+    display: flex;
+    justify-content: center; /* Căn giữa các cột theo chiều ngang */
+    gap: 20px;               /* Khoảng cách giữa các cột */
+    padding: 20px;
+    align-items: flex-start; /* Để các cột bắt đầu từ đỉnh */
+}
+
+/* Style cho từng cột */
+.column {
+    background-color: #f4f4f4;
+    border-radius: 8px;
+    width: 300px;              /* Độ rộng cố định cho mỗi cột */
+    padding: 15px;
+    min-height: 96%;
+}
+
+/* Style cho Badge trạng thái (Khớp với HTML của bạn) */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 12px;
+    text-transform: uppercase;
+    margin-bottom: 15px;
+    gap: 6px;
+}
+
+/* Vạch kẻ đứng trước chữ */
+.status-badge::before {
+    content: "";
+    width: 3px;
+    height: 12px;
+    border-radius: 2px;
+}
+
+.status-badge.todo { background-color: #e0f2fe; color: #0369a1; }
+.status-badge.todo::before { background-color: #0ea5e9; }
+
+.status-badge.inProgress { background-color: #fef3c7; color: #92400e; }
+.status-badge.inProgress::before { background-color: #f59e0b; }
+
+.status-badge.done { background-color: #dcfce7; color: #166534; }
+.status-badge.done::before { background-color: #22c55e; }
+
+/* Style cho các Card công việc nằm bên trong list */
+.task-card {
+    background: white;
+    border-radius: 0.5rem;
+    padding: 15px;
+    margin-bottom: 10px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    text-align: left; 
+    border-left: 5px solid transparent; 
+    transition: border-color 0.3s ease;
+}
+.card-body::before{
+    background-color: #0ea5e9;
+    content: "";
+    width: 3px;
+    height: 12px;
+    border-radius: 2px;
+}
+.card-header {
+    display: flex;
+    justify-content: unset;
+    align-items: center;
+    margin-bottom: 12px;
+    gap: 10px;
+}
+.card-body{
+    margin: 10px 0;
+}
+.due-date-label {
+    font-size: 11px;
+    border: 1px solid #6b728066;
+    color: #6b7280;
+    font-weight: 500;
+    background: #f9fafb;
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+/* Badge Priority */
+.priority-badge {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 8px;
+    border-radius: 6px;
+    text-transform: capitalize;
+}
+
+.prio-high { background: #fee2e2; color: #ef4444; }
+.prio-medium { background: #dcfce7; color: #22c55e; }
+.prio-low { background: #fef3c7; color: #f59e0b; }
+
+/* Body: Title & Desc */
+.task-title {
+    margin: 0 0 4px 0;
+    font-size: 14px;
+    color: #111827;
+    font-weight: 600;
+    white-space: nowrap;    /* Không cho chữ xuống dòng */
+    overflow: hidden;       /* Ẩn phần chữ bị thừa ra ngoài */
+    text-overflow: ellipsis; /* Thêm dấu ba chấm (...) vào cuối */
+}
+
+.task-desc {
+    font-size: 12px;
+    color: #6b7280;
+    margin: 0;
+    line-height: 1.5;
+    display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  /* Cố định chiều cao để card luôn đều nhau */
+  height: 3em;          /* 1.5 (line-height) * 2 (dòng) = 3em */
+}
+.progress-bar-container {
+    height: 3px;
+    background: #f3f4f6;
+    border-radius: 2px;
+    margin: 12px 0;
+}
+.progress-bar {
+    width: 60%;
+    height: 100%;
+    background: #ef4444;
+    border-radius: 2px;
+}
+
+/* Footer: Avatar & Delete */
+.card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.assignee-circle {
+    min-width: 30px;
+    height: 9.5px;
+    padding: 7px;
+    color: #614d6b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: bold;
+    border-radius: 0.3rem;
+    background-color: #f0f0f0;
+}
+
+.delete-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+    background-color: #e7e7e7;
+    border-radius: 0.3rem;
+    color: #ef4444;
+}
+.edit-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+    background-color: #e7e7e7;
+    border-radius: 0.3rem;
+    color: #0ea5e9;
+}
+
+.delete-btn:hover {
+    opacity: 1;
+}
+.edit-btn:hover {
+    opacity: 1;
+}
+
+/* Hiệu ứng Overdue */
+.overdue {
+    border-left: 4px solid #ef4444;
+}
